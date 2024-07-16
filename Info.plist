@@ -1,2 +1,7 @@
-<key>NSCammeraUsageDescription</key>
-<string>Need the permission to usage cammera</string>
+<plist version="1.0"/>
+<dict>
+    <key>NSCammeraUsageDescription</key>
+    <string>Need the permission to usage cammera</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Need the permission to access the photo library</string>
+</dict>
