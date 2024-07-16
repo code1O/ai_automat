@@ -1,0 +1,4 @@
+asyncio
+bleak # for bluetooth
+pyusb
+Serial # for communicating through devices

@@ -1,0 +1,9 @@
+# For machine learning
+
+numpy
+scipy
+scikit_learn
+torch
+torchvision
+pandas
+dask

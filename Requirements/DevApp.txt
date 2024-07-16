@@ -1,0 +1,4 @@
+pillow
+PyQt6
+customtkinter
+flask

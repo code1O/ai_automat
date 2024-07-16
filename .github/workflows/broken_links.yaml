@@ -1,0 +1,5 @@
+- name: Check links
+  uses: gauralv-nelson/github-actions-markdown-link-check@v1
+  with:
+    use-quiet-mode: 'yes'
+    use-verbose-mode: 'no'
