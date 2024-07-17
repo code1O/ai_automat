@@ -11,7 +11,7 @@ cd C:/Users/User/Desktop/ai_automat
 mkdir data
 cd data
 touch machle_demo_data.csv
-
+touch machle_data.csv
 ````
 
 Insert the next data in `machle_demo_data.csv`
@@ -24,9 +24,6 @@ Lamborghini,Toreador,185,762,175
 ````
 
 You can use this information for test of machine learning at `Tests/machine_learning.py`
-
-> [!CAUTION]
-> For questions of security, the only data file provided is the testing files
 
 ## Pip install
 
