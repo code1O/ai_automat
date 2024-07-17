@@ -1,2 +1,0 @@
-- name: Dependabot
-  uses: dependabot/fetch-metadata@v1

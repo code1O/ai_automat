@@ -1,0 +1,23 @@
+name: Dependency Updates
+on:
+  schedule:
+    - cron: '0 0 * * 6'
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v2
+
+      - name: npm update
+        run: npm update
+
+      - name: Update data-sci dependencies
+        run: pip install --upgrade -r Requirements/machle.txt
+
+      - name: Update web dependenies
+        run: pip install --upgrade -r Requirements/handle_web.txt
+        
+      - name: Update prebuilted AI dependencies
+        run: pip install --upgrade -r Requirements/AI.txt
