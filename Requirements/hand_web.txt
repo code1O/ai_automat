@@ -2,5 +2,6 @@ beautifulsoup4
 requests
 urllib3
 googlesearch-python
+googletrans
 pytube
 pytube3

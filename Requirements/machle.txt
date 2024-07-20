@@ -4,6 +4,9 @@ numpy
 scipy
 scikit_learn
 torch
+torchaudio
+torchtext
 torchvision
+tensorflow
 pandas
 dask

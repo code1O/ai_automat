@@ -1,4 +1,4 @@
-# Lets start to contribution!!
+# Lets start to contribution!! :woman_technologist: :man_technologist:
 
 ## Clone repository
 
@@ -9,6 +9,11 @@ cd C:/Users/User/Desktop
 git clone https://github.com/code1O/ai_automat.git
 cd C:/Users/User/Desktop/ai_automat
 mkdir data
+````
+
+### In case of you want to contribute in Machine Learning
+
+````bat
 cd data
 touch machle_demo_data.csv
 touch machle_data.csv
@@ -23,7 +28,7 @@ Mercedez Benz,Toronto,167,732,154
 Lamborghini,Toreador,185,762,175
 ````
 
-You can use this information for test of machine learning at `Tests/machine_learning.py`
+You can use this information for test of machine learning at `Tests/machine_learning`
 
 ## Pip install
 
@@ -33,9 +38,7 @@ There are many modules for install if you wanna contribute to this project
 
 ````bash
 cd Requirements
-
 python3 -m pip install -r AI.txt
-
 python3 -m pip install -r machle.txt
 ````
 
@@ -43,8 +46,6 @@ python3 -m pip install -r machle.txt
 
 ````bash
 cd Requirements
-
 python3 -m pip install hand_sys.txt
-
 python3 -m pip install hand_web.txt
 ````

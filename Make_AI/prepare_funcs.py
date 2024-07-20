@@ -1,10 +1,114 @@
 import numpy as np
 import pandas as pd
+import tensorflow as tf
+import torch.nn as nn
 from sklearn import linear_model
 from sklearn.preprocessing import StandardScaler
 
 scale = StandardScaler()
 poly_regress = lambda x, y, n: np.poly1d(np.polyfit(x,y,n))
+
+class neural_networks:
+    """
+    # Neural Networks
+    Init a neural network with both `tensorflow` or `pytorch`
+    
+    ## [TensorFlow](https://github.com/tensorflow/tensorflow)
+    
+    ```python
+    import numpy as np
+    
+    input_data = np.array([100.0])
+    input_shape = [1,]
+    input_units = 3
+    
+    celsius = np.array([40, 10, -15, 11], dtype=float)
+    farenheit = np.array([104, 50, 5, 51], dtype=float)
+    
+    neural_net = neural_networks(input_data, celsius, farenheit, input_units, input_shape)
+    tf_neural_net = neural_net.tensorflow(rounds=400)
+    
+    predicted_result = tf_neural_net["result"]
+    predicted_loss = tf_neural_net["loss"]
+    
+    print(predicted_result, predicted_loss, sep="\\n")
+    
+    ```
+    
+    ## [PyTorch](https://github.com/pytorch/pytorch)
+    
+    ```python
+    
+    import torch.nn as nn
+    import numpy as np
+    
+    array_a = np.array([[1,2,3,4,5,6,7,8,9.10]], dtype=float)
+    array_b = np.array([[11,12,13,14,15,16,17,18,19,20]], dtype=float)
+    
+    tensor_a = torch.from_numpy(array_a)
+    tensor_b = torch.from_numpy(array_b)
+    
+    input_tensor = tensor_a * tensor_b
+    
+    LinearSeq = nn.Sequential(
+    nn.Linear(10, 18),
+    nn.Linear(10, 18),
+    nn.Linear(20, 5)
+    )
+    
+    neural_net = neural_networks
+    
+    out_features = 1
+    
+    torch_neural_net = neural_net.pytorch(input_tensor, out_features, LinearSeq)
+    first_model_values = torch_neural_net[0]
+    print(first_model_values["model"])
+    
+    ```
+    
+    """
+    def __init__(self, input_data, array_a, array_b, *args) -> None:
+        self.input_data = input_data
+        self.array_a, self.array_b = array_a, array_b
+        self.units, self.input_shape = args[0], args[1]
+    
+    def tensor_flow(self, rounds, tf_optimizer=tf.keras.optimizers.Adam, optimizer_value=0.1):
+        """
+        **Parameters**
+        
+        - `tf_optimizer`
+          
+          Set `tf.keras.optimizers.Adam` as default.
+          
+          you can replace it with other optimizer
+        
+        - `optimizer_value`
+          
+          Set 0.1 as default value to optimize the compilation.
+          
+          you can replace it as many as you want
+        """
+        layer_hide1 = tf.keras.layers.Dense(units=self.units, input_shape=self.input_shape)
+        layer_hide2 = tf.keras.layers.Dense(units=self.units)
+        output = tf.keras.layers.Dense(units=1)
+        model = tf.keras.Sequential([layer_hide1, layer_hide2, output])
+        model.compile(
+            optimizer=tf_optimizer(optimizer_value),
+            loss="mean_squared_error"
+        )
+        history_ = model.fit(self.array_a, self.array_b, epochs=rounds, verbose=False)
+        result = model.predict(self.input_data)
+        loss = history_.history["loss"]
+        return dict(history_loss=loss, result=result)
+    
+    def pytorch(input_tensor, out_features, sequential):
+        
+        linear_layer = nn.Linear(in_features=len(input_tensor), out_features=out_features)
+        sequential_layer = sequential
+        model_1, model_2 = linear_layer(input_tensor), sequential_layer(input_tensor)
+        device, dtype = linear_layer.device, linear_layer.dtype
+        dictionary_model_1 = dict(device=device, dtype=dtype, model_1=model_1)
+        return dictionary_model_1, model_2
 
 class prediction:
     def __init__(self, csv_file, categories, predict_categorie) -> None:
