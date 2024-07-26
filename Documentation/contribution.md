@@ -8,27 +8,7 @@ Here´s a simple batch script to clone the repository
 cd C:/Users/User/Desktop
 git clone https://github.com/code1O/ai_automat.git
 cd C:/Users/User/Desktop/ai_automat
-mkdir data
 ````
-
-### In case of you want to contribute in Machine Learning
-
-````bat
-cd data
-touch machle_demo_data.csv
-touch machle_data.csv
-````
-
-Insert the next data in `machle_demo_data.csv`
-
-````csv
-Car,Model,Volume,Weight,CO2
-Toyota,Aigo,182,784,124
-Mercedez Benz,Toronto,167,732,154
-Lamborghini,Toreador,185,762,175
-````
-
-You can use this information for test of machine learning at `Tests/machine_learning`
 
 ## Pip install
 

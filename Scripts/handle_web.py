@@ -53,7 +53,7 @@ class download_youtube(YouTube):
         if (self.file_name != 0) or (self.path != 0):
             streams.download(self.path, self.file_name)
             
-        return f"{self.directory} already exists!, try again woth other directory"
+        return f"{self.directory} already exists!, try again with other directory"
     
     @property
     def download_as_mp3(self) -> str:

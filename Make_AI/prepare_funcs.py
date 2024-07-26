@@ -1,3 +1,21 @@
+#         Essential for compiling
+# ===================================================
+import sys
+import os
+
+path_folder = "../"
+
+dir_ = os.path.join(os.path.dirname(__file__), path_folder)
+sys.path.insert(0, os.path.abspath(dir_))
+# ===================================================
+
+from python_utils import (
+    _Typedata, _TdataNum, _TypeNum,
+)
+
+import torchtext
+torchtext.disable_torchtext_deprecation_warning()
+
 import numpy as np
 import pandas as pd
 import tensorflow as tf
@@ -20,7 +38,7 @@ class neural_networks:
     
     input_data = np.array([100.0])
     input_shape = [1,]
-    input_units = 3
+    input_units = 2
     
     celsius = np.array([40, 10, -15, 11], dtype=float)
     farenheit = np.array([104, 50, 5, 51], dtype=float)
@@ -67,12 +85,10 @@ class neural_networks:
     ```
     
     """
-    def __init__(self, input_data, array_a, array_b, *args) -> None:
-        self.input_data = input_data
+    def __init__(self, array_a, array_b) -> None:
         self.array_a, self.array_b = array_a, array_b
-        self.units, self.input_shape = args[0], args[1]
     
-    def tensor_flow(self, rounds, tf_optimizer=tf.keras.optimizers.Adam, optimizer_value=0.1):
+    def tensor_flow(self, rounds, tf_optimizer=tf.keras.optimizers.Adam, optimizer_value=0.1, **kwargs):
         """
         **Parameters**
         
@@ -87,9 +103,35 @@ class neural_networks:
           Set 0.1 as default value to optimize the compilation.
           
           you can replace it as many as you want
+        
+        **Kwargs**
+        - `input_shape`
+          
+          The shape of the array, you can know this by numpy.shape
+        
+        - `input_units`
+        
+          The quantity of elements inside an array
+          
+          `units = len(input_array)`
+          
+          Consider that both `x` & `y` arrays must have the same quantity of elements
+          
         """
-        layer_hide1 = tf.keras.layers.Dense(units=self.units, input_shape=self.input_shape)
-        layer_hide2 = tf.keras.layers.Dense(units=self.units)
+        
+        kwargs_params = {
+            "input_data": _Typedata,
+            "input_shape": _Typedata,
+            "input_units": _TypeNum
+        }
+        
+        kwargs_params.update(kwargs)
+        
+        input_data = kwargs_params["input_data"]
+        input_shape, input_units = kwargs_params["input_shape"], kwargs_params["input_units"]
+        
+        layer_hide1 = tf.keras.layers.Dense(units=input_units, input_shape=input_shape)
+        layer_hide2 = tf.keras.layers.Dense(units=input_units)
         output = tf.keras.layers.Dense(units=1)
         model = tf.keras.Sequential([layer_hide1, layer_hide2, output])
         model.compile(
@@ -97,12 +139,11 @@ class neural_networks:
             loss="mean_squared_error"
         )
         history_ = model.fit(self.array_a, self.array_b, epochs=rounds, verbose=False)
-        result = model.predict(self.input_data)
+        result = model.predict(input_data)
         loss = history_.history["loss"]
         return dict(history_loss=loss, result=result)
     
     def pytorch(input_tensor, out_features, sequential):
-        
         linear_layer = nn.Linear(in_features=len(input_tensor), out_features=out_features)
         sequential_layer = sequential
         model_1, model_2 = linear_layer(input_tensor), sequential_layer(input_tensor)
@@ -135,7 +176,6 @@ class prediction:
         X = df[self.categories]
         y = df[self.predict_categorie]
         scaledX = scale.fit_transform(X)
-        
         regr = linear_model.LinearRegression()
         return regr.fit(scaledX, y)
     
@@ -144,4 +184,3 @@ class prediction:
         scaled = scale.transform([values])
         prediction = instance.predict([scaled[0]])
         return prediction
-    

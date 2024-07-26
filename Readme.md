@@ -16,7 +16,7 @@ Frameworks/Libraries top used in this project
 
 An AI project designed to automation tasks even web tasks or system tasks like transfer files via Bluetooth or USB.
 
-## APIS </>
+## APIS &lt;/&gt;
 
 <table>
   <thead align="center">
