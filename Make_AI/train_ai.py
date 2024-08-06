@@ -10,7 +10,7 @@ from torchtext.data.functional import to_map_style_dataset
 from torchtext.data.utils import get_tokenizer
 from torchtext.vocab import build_vocab_from_iterator
 from torch.utils.data import DataLoader
-from .prepare_funcs import (neural_networks, prediction)
+from .prepare_funcs import (neural_networks, Prediction, HardPredict)
 
 class train_text:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -83,16 +83,22 @@ class train_text:
             return self.fc(embedded)
         
     # TODO: Try to fix these dataloaders accesibility
+    # PROBLEM: `collate_batch` 
     
-    train_dataloader = DataLoader(
-        split_train, batch_size=BATCH_SIZE, shuffle=True, collate_fn=collate_batch
-    )
-    test_dataloader = DataLoader(
-        split_train, batch_size=BATCH_SIZE, shuffle=True, collate_fn=collate_batch
-    )
-    valid_dataloader = DataLoader(
-        split_train, batch_size=BATCH_SIZE, shuffle=True, collate_fn=collate_batch
-    )
+    def prepare_dataloaders(self):
+        
+        train_dataloader = DataLoader(
+            self.split_train, batch_size=self.BATCH_SIZE, shuffle=True, collate_fn=self.collate_batch
+        )
+        test_dataloader = DataLoader(
+            self.split_train, batch_size=self.BATCH_SIZE, shuffle=True, collate_fn=self.collate_batch
+        )
+        valid_dataloader = DataLoader(
+            self.split_train, batch_size=self.BATCH_SIZE, shuffle=True, collate_fn=self.collate_batch
+        )
+        
+        dictionary = dict(train=train_dataloader, test=test_dataloader, validation=valid_dataloader)
+        return dictionary
     
     def prepare_items(self):
         vocab_size = len(self.__prepare_vocab(self.text_train_iter, ["<unk>"]))
@@ -122,7 +128,6 @@ class train_text:
             total_acc += (predicted_label.argmax(1) == label).sum().item()
             total_count += label.size(0)
             if idx % long_interval == 0 and idx > 0:
-                elapse = time.time() - start_time
                 print(
                     "| epoch {:3d} | {:5d}/{:5d} batches ",
                     "| accuracy {:8.3f}".format(
@@ -142,7 +147,6 @@ class train_text:
         with torch.no_grad():
             for idx, (label, text, offsets) in enumerate(dataloader):
                 predicted_label = model(text, offsets)
-                loss = self.criterion(predicted_label, label)
                 total_acc += (predicted_label.argmax(1) == label).sum().item()
                 total_count += label.size(0)
             return total_acc / total_count
@@ -158,11 +162,14 @@ class train_text:
     
     def run_model(self):
         items = self.prepare_items()
+        dataloaders = self.prepare_dataloaders()
+        train_dataloader = dataloaders["train"]
+        valid_dataloader = dataloaders["validation"]
         scheduler = items["optimizer"], items["scheduler"]
         for epoch in range(1, self.epochs + 1):
             epoch_start_time = time.time()
-            self.train(self.train_dataloader)
-            accu_val = self.evaluate(self.valid_dataloader)
+            self.train(train_dataloader)
+            accu_val = self.evaluate(valid_dataloader)
             if self.total_accu != None and self.total_accu > accu_val:
                 scheduler.step()
             else:
@@ -177,6 +184,11 @@ class train_text:
                 sep="\n"
             )
             print("-" * 59)
+
+
+class Train_Image:
+    def __init__(self) -> None: ...
+
 
 class mathematics:
     def __init__(self, in_categorie, out_categorie) -> None:
@@ -201,10 +213,15 @@ class mathematics:
         result = ( abs(y - x) / y ) * 10
         adjust_array = result[0] # adjust from [[x]] to [x]
         
+        message = ...
+        
         if adjust_array[0] >= 5:
-            messaage = "The precission is so good!"
+            message = "The precission is so good!"
             
         elif adjust_array[0] > 8:
             message = "The precission is so excelent!"
+        
+        else:
+            message = "So bad precission"
             
-        return adjust_array[0], messaage
+        return adjust_array[0], message

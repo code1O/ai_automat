@@ -1,5 +1,5 @@
 from .prepare_funcs import (
-    poly_regress, prediction, scale,
+    poly_regress, Prediction, scale,
     neural_networks
 )
 

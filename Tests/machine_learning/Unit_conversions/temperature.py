@@ -12,8 +12,6 @@ clear = lambda: os.system("cls")
 import numpy as np
 import pandas
 import torch
-import torch.nn as nn
-import matplotlib.pyplot as plt
 from Make_AI import neural_networks, mathematics
 
 df = pandas.read_json("data/machle_data.json")
@@ -45,8 +43,10 @@ predicted_value = tensor_c
 expected_value = 488.1500
 
 math_instance = mathematics(celsius, kelvin)
-precission = math_instance.precission(predicted_value, expected_value, 
-                                      input_units, input_shape)
+precission = math_instance.precission(
+    predicted_value, expected_value, 
+    input_units, input_shape
+)
 
 clear()
 print(tensor_c, precission, sep="\n")

@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.abspath(dir_))
 # ===================================================
 
 from python_utils import (
-    _Typedata, _TdataNum, _TypeNum,
+    _Typedata, _TypeNum,
 )
 
 import torchtext
@@ -60,8 +60,8 @@ class neural_networks:
     import torch.nn as nn
     import numpy as np
     
-    array_a = np.array([[1,2,3,4,5,6,7,8,9.10]], dtype=float)
-    array_b = np.array([[11,12,13,14,15,16,17,18,19,20]], dtype=float)
+    array_a = np.array([1,2,3,4,5,6,7,8,9.10], dtype=float, ndim=2)
+    array_b = np.array([[11,12,13,14,15,16,17,18,19,20]], dtype=float, ndmin=2)
     
     tensor_a = torch.from_numpy(array_a)
     tensor_b = torch.from_numpy(array_b)
@@ -107,7 +107,7 @@ class neural_networks:
         **Kwargs**
         - `input_shape`
           
-          The shape of the array, you can know this by numpy.shape
+          The shape of the array, you can know this by ``numpy.shape``
         
         - `input_units`
         
@@ -132,8 +132,8 @@ class neural_networks:
         
         layer_hide1 = tf.keras.layers.Dense(units=input_units, input_shape=input_shape)
         layer_hide2 = tf.keras.layers.Dense(units=input_units)
-        output = tf.keras.layers.Dense(units=1)
-        model = tf.keras.Sequential([layer_hide1, layer_hide2, output])
+        output_layer = tf.keras.layers.Dense(units=1)
+        model = tf.keras.Sequential([layer_hide1, layer_hide2, output_layer])
         model.compile(
             optimizer=tf_optimizer(optimizer_value),
             loss="mean_squared_error"
@@ -151,36 +151,103 @@ class neural_networks:
         dictionary_model_1 = dict(device=device, dtype=dtype, model_1=model_1)
         return dictionary_model_1, model_2
 
-class prediction:
-    def __init__(self, csv_file, categories, predict_categorie) -> None:
-        self.csv = csv_file
-        self.categories, self.predict_categorie = categories, predict_categorie
+class HardPredict:
+    def __init__(self, units, x, y, channels: int = 1) -> None: 
+        
+        self.channels = channels
+        self.x, self. y = x, y
+        self.input_units = units
     
-    @property
-    def initialize_normal(self):
-        df = pd.read_csv(self.csv)
-        X = df[self.categories]
-        y = df[self.predict_categorie]
-        regr = linear_model.LinearRegression()
-        return regr.fit(X, y)
-    
-    def execute_normal(self, values):
-        instance = self.initialize_normal
-        coeficient, prediction = instance.coef_, instance.predict([values])
-        dictionary_results = dict(coef=coeficient, predict=prediction)
-        return dictionary_results
+    @tf.function
+    def prepared_function(self, dropout_value: float=0.5, tf_optimizer: str = "adam", 
+                   cores: int = 32, *,
+                   group_shape: _Typedata, matrix_shape: _Typedata, **kwargs):
+        r"""
+        :Keyword Arguments:
+            * *epochs* (``int``) --
+            
+              Recommended at least 60 epochs for better optimization
+        """
+        hide_params = {
+            "input_data": _Typedata,
+            "size_batch": int,
+            "data_validation": _Typedata,
+            "epochs": int,
+            "steps_per_epoch": _TypeNum,
+            "validation_steps": _TypeNum
+        }
+        hide_params.update(kwargs)
+        model_epochs, data_steps_epoch = hide_params["epochs"], hide_params["steps_per_epoch"]
+        input_data = hide_params["input_data"]
+        size_batch = hide_params["size_batch"]
+        data_validation, steps_validation = hide_params["data_validation"], hide_params["validation_steps"]
+        aumented_core = cores * 2
+        x, y, channels, input_units = (self.x, self.y, self.channels, self.input_units)
+        model = tf.keras.Sequential([
+            tf.keras.layers.Conv2D(cores, group_shape, input_shape=(x, y, channels), activation="relu"),
+            tf.keras.layers.MaxPooling2D(matrix_shape),
+            tf.keras.layers.Conv2D(aumented_core, group_shape, activation="relu"),
+            tf.keras.layers.MaxPooling2D(matrix_shape),
+            tf.keras.layers.Dropout(dropout_value),
+            tf.keras.layers.Flatten(),
+            tf.keras.layers.Dense(units=input_units, activation="relu"),
+            tf.keras.layers.Dense(10, activation="softmax")
+        ])
+        model.compile(
+            optimizer=tf_optimizer,
+            loss=tf.keras.losses.SparseCategoricalCrossentropy(),
+            metrics=['accuracy']
+        )
+        
+        autotune = tf.data.experimental.AUTOTUNE
+        input_data = input_data.cache().shuffle(1000).batch(size_batch).prefetch(buffer_size=autotune)
+        data_validation = data_validation.cache().batch(size_batch).prefetch(buffer_size=autotune)
+        
+        history = model.fit(
+            input_data,
+            epochs=model_epochs,
+            batch_size=size_batch,
+            validation_data=data_validation,
+            steps_per_epoch=data_steps_epoch,
+            validation_steps=steps_validation,
+            verbose=False
+        )
+        
+        return history
+        
 
-    @property
-    def initialize_transform(self):
-        df = pd.read_csv(self.csv)
-        X = df[self.categories]
-        y = df[self.predict_categorie]
-        scaledX = scale.fit_transform(X)
-        regr = linear_model.LinearRegression()
-        return regr.fit(scaledX, y)
+class Prediction:
+    """
+    Sklearn prediction
     
-    def execute_transform(self, values):
-        instance = self.initialize_transform
-        scaled = scale.transform([values])
-        prediction = instance.predict([scaled[0]])
-        return prediction
+    Using sklearn to predict values by neural networks
+    
+    """
+    def __init__(self, input_data, input_categorie, output_categorie):
+        self.categories = dict(
+            input=input_categorie,
+            output=output_categorie
+        )
+        self.input_data = input_data
+    
+    @property
+    def execute_normal(self):
+        X, y = self.categories
+        regression = linear_model.LinearRegression()
+        fit_regression = regression.fit(X, y)
+        coeficient = fit_regression.coef_
+        predict = fit_regression.predict([self.input_data])
+        dictionary_results = dict(coef=coeficient, predict=predict)
+        return dictionary_results
+    
+    @property
+    def execute_transforming(self):
+        X, y = self.categories
+        scaledX = scale.fit_transform(X)
+        regression = linear_model.LinearRegression()
+        fit_regression = regression.fit(scaledX, y)
+        scaled_input_data = scale.transform(self.input_data)
+        scaled_array = scaled_input_data[0]
+        result = fit_regression.predict([scaled_array])
+        dictionary = dict(to_predict=self.input_data, value_predicted=result)
+        return dictionary

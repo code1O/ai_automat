@@ -1,0 +1,6 @@
+requests
+discord.py
+
+# Necessary for Whatsapp bot
+twilio
+flask

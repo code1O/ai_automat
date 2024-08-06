@@ -1,13 +1,15 @@
 {
   "dependencies": {
+    "@expo/metro-runtime": "~3.2.1",
     "axios": "^1.7.2",
     "create-expo-app": "^3.0.0",
     "expo": "^51.0.20",
     "npx": "^10.2.2",
+    "react-dom": "18.2.0",
     "react-native-camera": "^4.2.1",
     "react-native-python": "^0.0.0",
-    "react-dom": "18.2.0",
     "react-native-web": "~0.19.10",
-    "@expo/metro-runtime": "~3.2.1"
+    "react-navigation": "^5.0.0",
+    "undefined": "react-navigation/native"
   }
 }
