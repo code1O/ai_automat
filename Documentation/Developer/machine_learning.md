@@ -32,9 +32,9 @@ This applies for testing folders and other folders that are not `Make_AI`
 
 ## Starting neural network
 
-For starting a neural network you can use `neural_networks` function
+For starting a neural network you can use `neural_networks` function.
 
-Once you imported the functions ([check above](#importing-functions-in-other-folders)) you have to start your neural network
+Once you imported the functions, you have to start your neural network
 
 ````python
 
@@ -54,9 +54,11 @@ input_data = np.array([215.0])
 input_shape = [1,]
 input_units = 16
 
-neural_net = neural_networks(input_data, 
-                            celsius, farenheits,
-                            input_units, input_shape)
+neural_net = neural_networks(
+    input_data, 
+    celsius, farenheits,
+    input_units, input_shape
+)
 
 tf_neural_net = neural_net.tensorflow(rounds=400, optimizer_value=1.0)
 
@@ -66,4 +68,6 @@ print(predicted_value)
 
 ````
 
-For more details, check [some testing file](/Tests/machine_learning/Unit_conversions/temperature.py)
+For more details, check [some testing file](
+https://github.com/code1O/ai_automat/blob/main/Tests/machine_learning/Unit_conversions/temperature.py
+)
