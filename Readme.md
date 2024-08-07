@@ -89,4 +89,4 @@ For any inquires or feedback, feel free to contact me at feerperez1214@gmail.com
 
 
 > [!NOTE]
-> This project is found in buildment, so isn't not deployed yet
+> This project is found in buildment, so isn't deployed yet

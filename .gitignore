@@ -1,4 +1,8 @@
 .vscode/
 .dist/
+
+# MacOS
+
+.DS_Store
+
 node_modules/
-Models/
