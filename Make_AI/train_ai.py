@@ -81,9 +81,6 @@ class train_text:
         def forward(self, text, offsets):
             embedded = self.embedding(text, offsets)
             return self.fc(embedded)
-        
-    # TODO: Try to fix these dataloaders accesibility
-    # PROBLEM: `collate_batch` 
     
     def prepare_dataloaders(self):
         

@@ -1,14 +1,16 @@
 {
-  "name": "ai_automat",
+  "name": "api_hosts",
   "version": "1.0.0",
-  "description": "<!-- setup colored-icons -->",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
+  "description": "",
   "dependencies": {
-    "python-shell": "^5.0.0"
+    "discord-ts": "^0.0.0",
+    "discord.js": "^14.15.3",
+    "dotenv": "^16.4.5"
   }
 }

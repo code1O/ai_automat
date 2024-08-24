@@ -10,3 +10,7 @@ and improve the codewritting & developing of functions
 from .datatypes import (
     mats, _TdataNum, _TypeNum, _Typedata
 )
+
+from .handle_info import (
+    handle_json
+)

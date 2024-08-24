@@ -133,7 +133,11 @@ class neural_networks:
         layer_hide1 = tf.keras.layers.Dense(units=input_units, input_shape=input_shape)
         layer_hide2 = tf.keras.layers.Dense(units=input_units)
         output_layer = tf.keras.layers.Dense(units=1)
-        model = tf.keras.Sequential([layer_hide1, layer_hide2, output_layer])
+        model = tf.keras.Sequential([
+            layer_hide1, layer_hide2, output_layer,
+            tf.keras.layers.Dropout(0.5),
+            tf.keras.layers.Flatten()
+        ])
         model.compile(
             optimizer=tf_optimizer(optimizer_value),
             loss="mean_squared_error"
@@ -251,3 +255,4 @@ class Prediction:
         result = fit_regression.predict([scaled_array])
         dictionary = dict(to_predict=self.input_data, value_predicted=result)
         return dictionary
+    

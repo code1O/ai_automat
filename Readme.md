@@ -84,9 +84,22 @@ The project is licensed under the MIT license. See the [License](License.txt) fi
 
 For any inquires or feedback, feel free to contact me at feerperez1214@gmail.com
 
-
 </details>
 
 
 > [!NOTE]
 > This project is found in buildment, so isn't deployed yet
+
+# Q&A
+
+As a good developer, i know what might be your questions about this project, so, i'll answer that questions hopping i clarify you.
+
+<details>
+<summary><h2>Same app for different devices</h2></summary>
+
+Q - "Why is there web app & mobile app? both web app and mobile app are similar, and i can use the web app in my mobile device"
+
+Well, the purpose is: if your connection status to WiFi is 678 (disconnected), you can access to the mobile app as a second resource. 
+The mobile app is designed to **work without WiFi connection**.
+
+</details>
