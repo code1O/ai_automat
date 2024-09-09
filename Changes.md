@@ -31,12 +31,8 @@ Yeah, some of the neural networks has problems to predict trigonometry functions
 > I notice that it's so ambiguous to train the machine to predict trigonometric values. I'll not implementing that long
 
 
-# What's new? (24/08/2024)
-
-- ## Added ``Ligthbulb`` folder
-
-``Lightbulb`` was add as a resource to improve code drafts before implementing it in ``Tests``. 
-
-As developer, you can add your own draft file with the extension ``.ipynb``.
+# What's new? (08/09/2024)
 
 - ## Changed `Next.js` instead `React` framework
+
+- ## Added backend functions to app
