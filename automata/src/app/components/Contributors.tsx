@@ -1,8 +1,10 @@
 import React from "react";
 import { User, Link } from "@nextui-org/react";
-import { GithubParse } from "@Scripts/fordevs"
+import { GithubFetch } from "@Scripts/fordevs"
 
 const contribuitors = [""];
+let dataGithub: Array<any> = [];
+
 
 
 export default function Contributors() {
@@ -11,7 +13,7 @@ export default function Contributors() {
         name="code1O"
         description={(
             <Link href="" size="sm" isExternal>
-                @code1O
+                {}
             </Link>
         )}
         avatarProps={{

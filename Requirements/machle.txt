@@ -9,5 +9,8 @@ torchtext
 torchvision
 torchdata
 tensorflow
+keras
+keras.models
+keras.layers
 pandas
 portalocker

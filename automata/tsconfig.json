@@ -20,7 +20,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@SvgIcons/*": ["../Assets/Images/SvgIcons/*"],
-      "@Scripts/*": ["../Scripts/*"]
+      "@Scripts/*": ["../Scripts/*"],
+      "@models/": ["../Models/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

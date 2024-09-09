@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { SearchInput } from "./components/inputs";
 import { IconAlert } from "./components/alerts"
+import { Mainview } from "./Views/Account_LandView";
 
 const externalLinks = {
   Github: "https://github.com/code1O/ai_automat",
@@ -14,29 +15,27 @@ const externalLinks = {
 }
 
 export default function Home() {
-  const [componentShow, setComponentShow] = useState<React.ReactNode| null>(null)
+  const [componentShow, setComponentShow] = useState<React.ReactNode | null>(null)
   const handleAlert = () => {
-    setComponentShow(<IconAlert AlertMessage="Message" />)
+    setComponentShow(<IconAlert AlertMessage="Message" timeout={3000}/>)
   }
   return (
     <main className="flex min-h-screen flex-col items-center justify-start p-24">
 
       <div className="flex flex-col items-center mb-10">
-        <span className="bg-clip-text text-5xl font-extrabold text-transparent bg-gradient-to-b from-violet-500 to-emerald-500" translate="no">
+        <span className="bg-clip-text text-5xl text-transparent bg-gradient-to-tr from-cyan-400 to-violet-600" translate="no">
           Automata
         </span>
-        <p className="text-xl bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-cyan-500 mt-2">
+        <p className="text-xl bg-clip-text text-transparent bg-gradient-to-tr from-cyan-400 to-violet-600 mt-2">
           The house of thousands surprises
         </p>
       </div>
       
       <div className="flex flex-col items-center">
         <div className="flex items-start">
-          <SearchInput textHolder="Search anything"/>
+          <SearchInput textHolder="Search anything..." onButtonClick={handleAlert}/>
         </div>
-      </div>
-
-      <div className="w-full mr-30 mb-40 text-center">
+        {componentShow}
       </div>
     </main>
   );

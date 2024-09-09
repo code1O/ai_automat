@@ -45,7 +45,7 @@ import tensorflow as tf
 import pandas as pd
 
 df = pd.read_json("data/machle_data.json")
-unit_con = df.get("Unit_conversions")
+unit_conv = df.get("Unit_conversions")
 temperature = unit_conv[0]["Temperature"]
 celsius = np.array(temperature[0]["Celsius"])
 farenheit = np.array(temperature[0]["Farenheits"])

@@ -1,11 +1,7 @@
-#         Essential for compiling
-# ===================================================
-import sys
-import os
+import os, sys
+from compiling_util import SetNavigation
 
-dir_ = os.path.join(os.path.dirname(__file__), "../../../")
-sys.path.insert(0, os.path.abspath(dir_))
-# ===================================================
+SetNavigation(3)
 
 import torchtext
 torchtext.disable_torchtext_deprecation_warning()

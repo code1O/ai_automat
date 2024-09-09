@@ -5,8 +5,14 @@
 
 .DS_Store
 
+# OTHERS
+
 node_modules/
 
-.ipynb
+Lightbulb/
+
+# CONFIDENTIAL
 
 .env
+
+Backend/

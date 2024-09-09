@@ -11,10 +11,6 @@ from googlesearch import search
 
 re_chars = re.compile("<.*?>")
 
-def search_query(query, language="en"):
-    for results in search(query, num_results=10, lang=language):
-        return results
-
 def check_connection():
     url = "https://google.com"
     try:
@@ -69,13 +65,13 @@ class extract_query:
         content = html.find(class_="wrapper")
         href = content.find_all("a", {"class":""}, href=True)
         
-class download_youtube(YouTube):
+class request_YT(YouTube):
     def __init__(self, query, path_destiny, file_name) -> None:
         super().__init__(query)
         
         if path.exists(path.join(path_destiny, file_name)):
             self.path, self.file_name = 0, 0
-    
+        
         self.path, self.file_name = path_destiny, file_name
         self.directory = path.join(path_destiny, file_name)
         

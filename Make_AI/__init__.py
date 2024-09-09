@@ -1,8 +1,12 @@
 from .prepare_funcs import (
-    poly_regress, Prediction, scale,
+    Prediction, HardPredict,
     neural_networks
 )
 
 from .train_ai import (
     train_text, mathematics
+)
+
+from .models import (
+    model_conversion, export_model, globalReadJson
 )

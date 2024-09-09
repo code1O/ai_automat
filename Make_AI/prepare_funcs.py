@@ -1,13 +1,12 @@
-#         Essential for compiling
+import os, sys, subprocess
+#                 Compiling
 # ===================================================
-import sys
-import os
 
-path_folder = "../"
+path_folder = "../../"
 
 dir_ = os.path.join(os.path.dirname(__file__), path_folder)
 sys.path.insert(0, os.path.abspath(dir_))
-# ===================================================
+# ==================================================
 
 from python_utils import (
     _Typedata, _TypeNum,
@@ -22,6 +21,12 @@ import tensorflow as tf
 import torch.nn as nn
 from sklearn import linear_model
 from sklearn.preprocessing import StandardScaler
+from keras._tf_keras.keras.models import Sequential
+from keras._tf_keras.keras.layers import (Conv2D, MaxPooling2D, Dense, Dropout, Flatten)
+
+from rich.console import Console
+
+rich_console = Console()
 
 scale = StandardScaler()
 poly_regress = lambda x, y, n: np.poly1d(np.polyfit(x,y,n))
@@ -88,7 +93,7 @@ class neural_networks:
     def __init__(self, array_a, array_b) -> None:
         self.array_a, self.array_b = array_a, array_b
     
-    def tensor_flow(self, rounds, tf_optimizer=tf.keras.optimizers.Adam, optimizer_value=0.1, **kwargs):
+    def tensor_flow(self, save_where: str, save_as: str, *, rounds, tf_optimizer=tf.keras.optimizers.Adam, optimizer_value=0.1, **kwargs):
         """
         **Parameters**
         
@@ -145,6 +150,10 @@ class neural_networks:
         history_ = model.fit(self.array_a, self.array_b, epochs=rounds, verbose=False)
         result = model.predict(input_data)
         loss = history_.history["loss"]
+        
+        os.chdir(save_where)
+        model.save(save_as)
+        
         return dict(history_loss=loss, result=result)
     
     def pytorch(input_tensor, out_features, sequential):
@@ -156,16 +165,31 @@ class neural_networks:
         return dictionary_model_1, model_2
 
 class HardPredict:
-    def __init__(self, units, x, y, channels: int = 1) -> None: 
-        
-        self.channels = channels
-        self.x, self. y = x, y
-        self.input_units = units
-    
-    @tf.function
-    def prepared_function(self, dropout_value: float=0.5, tf_optimizer: str = "adam", 
-                   cores: int = 32, *,
-                   group_shape: _Typedata, matrix_shape: _Typedata, **kwargs):
+    """
+    Using **convolutional neural networks** to predict smarter
+
+    ## Use example
+    ```python
+
+    group_shape, matrix_shape = (3,3), (2,2)
+    height, width = 224, 224
+    np_rand_array = np.random.rand(2, 100)
+    X_data, Y_data = np_rand_array
+
+    input_data, expected_data = np.array([100.0]), 150.0 # Change as many as you need
+    units = len(np_rand_array)
+    model = HardPredict(
+        group_shape, matrix_shape, units, height, width,
+        X_train=X_data, Y_train=Y_data,
+        size_batch=32, epochs=60
+    )
+    predict = model.predict(input_data)
+
+    ```
+    """
+    def __init__(self, dropout_value: float = 0.5, tf_optimizer: str = "adam",
+                cores: int = 32, channels: int = 1, *,
+                group_shape: _Typedata, matrix_shape:_Typedata, units: int, height: int, width: int, **kwargs) -> None: 
         r"""
         :Keyword Arguments:
             * *epochs* (``int``) --
@@ -173,52 +197,69 @@ class HardPredict:
               Recommended at least 60 epochs for better optimization
         """
         hide_params = {
-            "input_data": _Typedata,
+            "X_train": _Typedata,
+            "Y_train": _Typedata,
             "size_batch": int,
-            "data_validation": _Typedata,
             "epochs": int,
-            "steps_per_epoch": _TypeNum,
-            "validation_steps": _TypeNum
+            "data_validation": _Typedata,
+            "save_where":str,
+            "save_as": str
         }
         hide_params.update(kwargs)
-        model_epochs, data_steps_epoch = hide_params["epochs"], hide_params["steps_per_epoch"]
-        input_data = hide_params["input_data"]
-        size_batch = hide_params["size_batch"]
-        data_validation, steps_validation = hide_params["data_validation"], hide_params["validation_steps"]
-        aumented_core = cores * 2
-        x, y, channels, input_units = (self.x, self.y, self.channels, self.input_units)
-        model = tf.keras.Sequential([
-            tf.keras.layers.Conv2D(cores, group_shape, input_shape=(x, y, channels), activation="relu"),
-            tf.keras.layers.MaxPooling2D(matrix_shape),
-            tf.keras.layers.Conv2D(aumented_core, group_shape, activation="relu"),
-            tf.keras.layers.MaxPooling2D(matrix_shape),
-            tf.keras.layers.Dropout(dropout_value),
-            tf.keras.layers.Flatten(),
-            tf.keras.layers.Dense(units=input_units, activation="relu"),
-            tf.keras.layers.Dense(10, activation="softmax")
+        self.hide_params = hide_params
+        self.channels = channels
+        self.height, self.width = height, width
+        self.input_units = units
+        self.dropout_value = dropout_value
+        self.tf_optimizer = tf_optimizer
+        self.cores = cores
+        self.group_shape = group_shape
+        self.matrix_shape = matrix_shape
+    
+    @tf.function
+    def __prepared_function(self):
+        model_epochs, size_batch = self.hide_params["epochs"], self.hide_params["size_batch"]
+        X_train, Y_train = self.hide_params["X_train"], self.hide_params["Y_train"]
+        save_as, save_where = self.hide_params["save_as"], self.hide_params["save_where"]
+        
+        augmented_core = self.cores * 2
+        decreased_units = self.input_units.__floordiv__(10)
+        
+        x, y, channels, input_units = (self.height, self.width, self.channels, self.input_units)
+        
+        model = Sequential([
+            Conv2D(self.cores, self.group_shape, input_shape=(x, y, channels), activation="relu"),
+            MaxPooling2D(self.matrix_shape),
+            Conv2D(augmented_core, self.group_shape, activation="relu"),
+            MaxPooling2D(self.matrix_shape),
+            Dropout(self.dropout_value),
+            Flatten(),
+            Dense(units=input_units, activation="relu"),
+            Dense(units=decreased_units, activation="softmax")
         ])
+        
         model.compile(
-            optimizer=tf_optimizer,
-            loss=tf.keras.losses.SparseCategoricalCrossentropy(),
-            metrics=['accuracy']
+            optimizer=self.tf_optimizer,
+            loss=tf.keras.losses.MeanSquaredError(),
+            metrics=['mean_absolute_error']
         )
         
-        autotune = tf.data.experimental.AUTOTUNE
-        input_data = input_data.cache().shuffle(1000).batch(size_batch).prefetch(buffer_size=autotune)
-        data_validation = data_validation.cache().batch(size_batch).prefetch(buffer_size=autotune)
-        
-        history = model.fit(
-            input_data,
+        model.fit(
+            X_train, Y_train,
             epochs=model_epochs,
             batch_size=size_batch,
-            validation_data=data_validation,
-            steps_per_epoch=data_steps_epoch,
-            validation_steps=steps_validation,
             verbose=False
         )
         
-        return history
+        os.chdir(save_where)
+        model.save(save_as)
         
+        return model
+    
+    def predict(self, input_data: _Typedata):
+        predicted = self.__prepared_function().predict(input_data)
+        return predicted
+    
 
 class Prediction:
     """

@@ -9,6 +9,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "python-shell": "^5.0.0"
+    "@tensorflow/tfjs": "^4.20.0",
+    "@types/better-sqlite3": "^7.6.11",
+    "bcrypt": "^5.1.1",
+    "better-sqlite3": "^11.2.1",
+    "date-fns": "^3.6.0",
+    "dotenv": "^16.4.5",
+    "python-shell": "^5.0.0",
+    "serpapi": "^2.1.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2"
   }
 }
