@@ -2,18 +2,19 @@
 import { useEffect, useState } from "react";
 
 type styling  = {
+    onHide?: () => void,
     timeout?: number,
     AlertMessage: string
 }
 
-export function IconAlert(props: styling) {
+export function IconAlert({timeout, onHide, AlertMessage}: styling) {
     const [visible, setVisible] = useState(true);
     useEffect(() => {
         const timer = setTimeout(()=> {
             setVisible(false);
-        }, props.timeout);
+        }, timeout);
         return () => clearTimeout(timer);
-    }, []);
+    }, [visible, timeout, onHide]);
     
     if(!visible) return null;
     return(
@@ -26,7 +27,9 @@ export function IconAlert(props: styling) {
             </path>
             </svg>
         </div>
-        <div className="ml-3 mr-12"></div>
+        <div className="ml-3 mr-12">
+            {AlertMessage}
+        </div>
         </div>
     )
 }

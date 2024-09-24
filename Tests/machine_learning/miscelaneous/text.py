@@ -1,6 +1,4 @@
-from compiling_util import SetNavigation
 
-SetNavigation(3)
 
 import torchtext
 torchtext.disable_torchtext_deprecation_warning()

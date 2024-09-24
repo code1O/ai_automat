@@ -1,3 +1,4 @@
+import { _HandleRegister, _HandleLogin } from "../Backend/ManageServer"
 
 type inputProps =  {
     keyUpEvent?: () => void;
@@ -41,23 +42,83 @@ export const ChatQueryInput = ({onButtonClick, textHolder}: inputProps) => {
 
 const SomeInput = (props: any) =>{
     return (
-        <div className="relative w-full mt-4">
-            <input id="UsernameInput" className="w-[400px] rounded-md pr-11 bg-transparent border border-slate-100 placeholder:text-slate-300 duration-200 ease transition hover:opacity-50 outline outline-width-2 outline-1 outline-transparent ml-2" placeholder={props.placeholder} type={props.typeInput}></input>
+        <div className="relative w-full mt-4 ml-6">
+            <input
+            id={props.id}
+            className="w-full rounded-none h-10 pl-3 py-2 pr-11 bg-transparent 
+            border-b border-slate-500 placeholder:text-slate-100 duration-200  hover:border-slate-300
+            text-slate-100 ease transition outline outline-width-2 outline-1 outline-transparent ml-2 focus:ring-0"
+            placeholder={props.placeholder}
+            type={props.typeInput}
+            onChange={props.onChange}></input>
         </div>
     )
 }
-export const AccountInputs = ({onButtonClick}: inputProps) => {
+
+type actionAccount = {
+    createAccount: () => void,
+    keepAnonymous: () => void,
+    onChanges: {
+        EmailInput: Function,
+        PhoneInput: Function,
+        UserInput: Function,
+        PasswordInput: Function
+    },
+}
+
+export const AccountRegister = ({createAccount, keepAnonymous, onChanges}: actionAccount) => {
     return (
         <div className="max-w-[400px] relative mt-4">
-            <SomeInput placeholder="Email..." typeInput="email"/>
-            <SomeInput placeholder="Phone number..." typeInput="tel"/>
-            <SomeInput placeholder="Username..." type="text"/>
-            <SomeInput placeholder="Password..." typeInput="password"/>
-            <div className="flex flex-row justify-evenly ml-[-65px] mt-6">
+            <SomeInput placeholder="Email..." type="email" onChange={onChanges.EmailInput}/>
+            <SomeInput placeholder="Phone number..." type="tel" onChange={onChanges.PhoneInput}/>
+            <SomeInput placeholder="Username..." type="text" onChange={onChanges.UserInput}/>
+            <SomeInput placeholder="Password..." type="password" onChange={onChanges.PasswordInput}/>
+            <div className="flex flex-row justify-evenly ml-[-10px] mt-6">
 
-                <button className="right-1 top-1 my-auto px-2 flex  bg-slate-800 rounded-lg hover:bg-slate-700" type="button" onClick={onButtonClick}>Save data</button>
+                <button
+                className="right-1 top-1 my-auto px-2 flex 
+                bg-slate-800 rounded-lg hover:bg-slate-700"
+                type="button"
+                onClick={createAccount}
+                >Create account</button>
 
-                <button className="right-1 top-1 my-auto px-2 flex  bg-slate-800 rounded-lg hover:bg-slate-700" type="button" onClick={onButtonClick}>Continue anonymous</button>
+                <button
+                className="right-1 top-1 my-auto px-2 flex 
+                bg-slate-800 rounded-lg hover:bg-slate-700"
+                type="button"
+                onClick={keepAnonymous}
+                >Continue as anonymous</button>
+                
+            </div>
+        </div>
+    )
+}
+
+type loginAccount = {
+    ForgotData: () => void,
+    LoginIntoApp: () => void,
+    onChanges: {
+        UsernameInput: Function,
+        PasswordInput: Function,
+    }
+}
+
+export const AccountLogin = ({LoginIntoApp, ForgotData, onChanges}: loginAccount) => {
+    return (
+        <div className="max-w-[400px] relative mt-4">
+            <SomeInput placeholder="Username..." typeInput="text" onChange={onChanges.UsernameInput} />
+            <SomeInput placeholder="Password..." typeInput="password" onChange={onChanges.PasswordInput} />
+            <div className="flex flex-row justify-evenly ml-[-10px] mt-6">
+                <button
+                className="right-1 top-1 my-auto px-2 flex bg-slate-800 rounded-lg hover:bg-slate-700"
+                type="submit"
+                onClick={LoginIntoApp}
+                >Login Account</button>
+                <button
+                className="right-1 top-1 my-auto px-2 flex bg-slate-800 rounded-lg hover:bg-slate-700"
+                type="button"
+                onClick={ForgotData}
+                >Forgot my data</button>
             </div>
         </div>
     )

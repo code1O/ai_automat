@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@spotify/web-api-ts-sdk": "^1.2.0",
     "@tensorflow/tfjs": "^4.20.0",
     "@types/better-sqlite3": "^7.6.11",
     "bcrypt": "^5.1.1",
