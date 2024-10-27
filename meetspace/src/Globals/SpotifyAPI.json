@@ -1,0 +1,14 @@
+{
+    "REDIRECT_URI": "http://localhost:3000/callback",
+    "AUTH_CODE": "",
+    "Web_Visible_Scopes": [
+        "user-library-read",
+        "user-read-currently-playing",
+        "user-follow-read",
+        "user-top-read"
+    ],
+    "Discord_Visible_Scopes": [
+        "user-top-read",
+        "user-follow-read"
+    ]
+}

@@ -1,0 +1,30 @@
+{
+    "Image_Resolutions": [
+        {
+            "ShortScreen": {
+                "Image_Width": "300px",
+                "Image_Height": "480px"
+            },
+            "LargeScreen": {
+                "Image_Width": "480px",
+                "Image_Height": "480px"
+            }
+        }
+    ],
+    "Expected_Screens_Dimensions":[
+        {
+            "ShortScreen": [
+                {
+                    "Width": 375,
+                    "Height": 864
+                }
+            ],
+            "LargeScreen":[
+                {
+                    "Width": 1536,
+                    "Height": 864
+                }
+            ]
+        }
+    ]
+}
